@@ -11,7 +11,25 @@ import os
 
 def run(**kwargs):
 
-    dir_name = kwargs.get('dirname')
+    my_data = kwargs.get('cluster')
+    row, col = my_data.shape
+    row_names: list = []
+    for i in range(col):
+        if i == 1:
+            row_names.append('coordinate_x'),
+        elif i == 2:
+            row_names.append('coordinate_y')
+        elif i == col-1:
+            row_names.append('cluster_id')
+        else:
+            row_names.append(f'{i}')
+    pd_data = pd.DataFrame(my_data)
+    pd_data.columns = row_names
+
+    dir_name = tempfile.mkdtemp()
+    temp = tempfile.mktemp(suffix='.csv', dir=dir_name)
+    pd_data.to_csv(path_or_buf=temp)
+
     prefix = f"java -jar CellCell-1.0-SNAPSHOT-all.jar {dir_name} "
     command = f'{prefix} {kwargs.get("epsilons")} {kwargs.get("nboots")} ' \
               f'{kwargs.get("threshold")} {kwargs.get("useRois")} {kwargs.get("mode")} '
@@ -45,47 +63,21 @@ def run(**kwargs):
                 result_data = np.genfromtxt(file, delimiter=',')
                 result[folder_name] = result_data
 
-    return result
+    return {"CellCell": result}
 
-# java -jar CellCell-1.0-SNAPSHOT-all.jar
-# "C:/my_pack/work/gene/spatial/spatial_analysis_histocat_and_emd-main/CellCell" filename
-# "234" epsilons
-# "100" nboots
-# "10" threshold
-# "0" useRois
-# "0" mode
+# debug section
+# kwargs = {
+#     "epsilons": 234,
+#     "nboots": 100,
+#     "threshold": 10,
+#     "useRois": 0,
+#     "mode": 0
+# }
+# debug section
 
+# my_data = np.genfromtxt('data.csv', delimiter=',')
+# kwargs['cluster'] = my_data
 
-kwargs = {
-    "epsilons": "234",
-    "nboots": "100",
-    "threshold": "10",
-    "useRois": "0",
-    "mode": "0"
-}
-# data = pd.read_csv("cluster.csv")
-# dir_name = tempfile.mkdtemp()
-# temp = tempfile.mktemp(suffix='.csv', dir=dir_name)
-# data.to_csv(path_or_buf=temp)
+# print(run(**kwargs))
 
-my_data = np.genfromtxt('data.csv', delimiter=',')
-row, col = my_data.shape
-row_names: list = []
-for i in range(col):
-    if i == 1:
-        row_names.append('coordinate_x'),
-    elif i == 2:
-        row_names.append('coordinate_y')
-    elif i == col-1:
-        row_names.append('cluster_id')
-    else:
-        row_names.append(f'{i}')
-
-dir_name = tempfile.mkdtemp()
-temp = tempfile.mktemp(suffix='.csv', dir=dir_name)
-pd_data = pd.DataFrame(my_data)
-pd_data.columns = row_names
-pd_data.to_csv(path_or_buf=temp)
-kwargs['dirname'] = dir_name
-
-print(run(**kwargs))
+# debug section

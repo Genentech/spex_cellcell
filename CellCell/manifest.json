@@ -5,46 +5,46 @@
   "params": {
     "epsilons": {
       "name": "epsilons",
-      "description": "",
+      "description": "234",
       "type": "int",
       "required": true,
-      "default": 200
+      "default": 234
     },
     "nboots": {
       "name": "nboots",
-      "description": "",
+      "description": "100",
       "type": "int",
       "required": true,
-      "default": 200
+      "default": 100
     },
     "threshold": {
       "name": "threshold",
-      "description": "",
+      "description": "10",
       "type": "int",
       "required": true,
-      "default": 200
+      "default": 10
     },
     "useRois": {
       "name": "useRois",
-      "description": "",
+      "description": "0",
       "type": "int",
       "required": true,
-      "default": 200
+      "default": 0
     },
     "mode": {
       "name": "mode",
-      "description": "",
+      "description": "0",
       "type": "int",
       "required": true,
-      "default": 200
+      "default": 0
     }
 
   },
   "script_path": "CellCell",
   "return": {
-    "cluster": {
-      "name": "cluster",
-      "type": "array",
+    "CellCell": {
+      "name": "CellCell",
+      "type": "dict",
       "description": "training transformed"
     }
   },
