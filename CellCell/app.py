@@ -7,6 +7,7 @@ import numpy as np
 import logging
 from glob import glob
 import os
+import shutil
 
 
 def run(**kwargs):
@@ -30,7 +31,7 @@ def run(**kwargs):
     temp = tempfile.mktemp(suffix='.csv', dir=dir_name)
     pd_data.to_csv(path_or_buf=temp)
 
-    prefix = f"java -jar CellCell-1.0-SNAPSHOT-all.jar {dir_name} "
+    prefix = f"java -jar {os.path.join(os.path.dirname(__file__), 'CellCell-1.0-SNAPSHOT-all.jar')} {dir_name} "
     command = f'{prefix} {kwargs.get("epsilons")} {kwargs.get("nboots")} ' \
               f'{kwargs.get("threshold")} {kwargs.get("useRois")} {kwargs.get("mode")} '
 
@@ -63,6 +64,7 @@ def run(**kwargs):
                 result_data = np.genfromtxt(file, delimiter=',')
                 result[folder_name] = result_data
 
+    shutil.rmtree(dir_name, ignore_errors=True)
     return {"CellCell": result}
 
 # debug section
